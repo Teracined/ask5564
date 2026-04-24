@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>5564 群聊人物语气模拟器</title>
+<style>
+:root{--bg:#f6f0e8;--card:#fffaf2;--ink:#27221f;--muted:#766b61;--line:#e5d7c8;--accent:#ff7a59;--accent2:#7b61ff;--bubble:#fff;--shadow:0 16px 45px rgba(64,45,24,.10)}
+[data-theme="dark"]{--bg:#17151c;--card:#24202d;--ink:#f8eee5;--muted:#c2b5ac;--line:#3d3547;--accent:#ff9a76;--accent2:#9b86ff;--bubble:#302b39;--shadow:0 16px 45px rgba(0,0,0,.25)}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at top left,rgba(255,122,89,.18),transparent 34%),radial-gradient(circle at 80% 10%,rgba(123,97,255,.15),transparent 30%),var(--bg);color:var(--ink)}
+button,input,textarea{font:inherit}.wrap{max-width:1220px;margin:0 auto;padding:26px}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:stretch}.panel{background:rgba(255,250,242,.82);background:color-mix(in srgb,var(--card) 90%,transparent);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:28px;padding:24px;backdrop-filter:blur(18px)}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);background:rgba(255,255,255,.25)}h1{font-size:clamp(34px,6vw,72px);line-height:.95;margin:18px 0 14px;letter-spacing:-.06em}.lead{font-size:18px;color:var(--muted);line-height:1.8;max-width:720px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.btn{border:0;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:16px;cursor:pointer;transition:.2s transform,.2s opacity}.btn:hover{transform:translateY(-2px)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.accent{background:linear-gradient(135deg,var(--accent),#ffb36e);color:#28130b}.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat{padding:18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.25)}.stat b{display:block;font-size:28px}.stat span{color:var(--muted);font-size:13px}.tabs{position:sticky;top:0;z-index:5;padding:14px 0;background:linear-gradient(var(--bg) 70%,transparent)}.tabbar{display:flex;gap:10px;overflow:auto}.tab{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;border-radius:999px;cursor:pointer}.tab.active{background:var(--ink);color:var(--bg)}.section{display:none}.section.active{display:block}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 10px 24px rgba(0,0,0,.04);position:relative;overflow:hidden}.card:before{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:color-mix(in srgb,var(--accent) 15%,transparent)}.avatar{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-weight:800}.person-top{display:flex;gap:12px;align-items:center;margin-bottom:12px}.person-top h3{margin:0;font-size:20px}.tag{color:var(--muted);font-size:13px;margin-top:4px}.pillbox{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.pill{font-size:12px;padding:6px 9px;border-radius:999px;background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid var(--line)}.mini{font-size:13px;color:var(--muted);line-height:1.7}.details{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}.details li{margin:6px 0;color:var(--muted);line-height:1.55}.chat-layout{display:grid;grid-template-columns:320px 1fr;gap:18px}.side-list{display:flex;flex-direction:column;gap:10px}.person-btn{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;cursor:pointer;text-align:left}.person-btn.active{outline:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--card))}.chatbox{min-height:610px;display:flex;flex-direction:column}.chat-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px}.messages{flex:1;overflow:auto;padding:16px 4px;display:flex;flex-direction:column;gap:12px}.msg{max-width:78%;padding:12px 14px;border-radius:18px;line-height:1.6;box-shadow:0 6px 16px rgba(0,0,0,.04)}.msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#ffb36e);color:#2a130d;border-bottom-right-radius:4px}.msg.bot{align-self:flex-start;background:var(--bubble);border:1px solid var(--line);border-bottom-left-radius:4px}.chat-input{display:flex;gap:10px;border-top:1px solid var(--line);padding-top:14px}.chat-input input{flex:1;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:16px;padding:13px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}.chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 10px;cursor:pointer;font-size:12px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}.meter{height:10px;border-radius:99px;background:color-mix(in srgb,var(--line) 70%,transparent);overflow:hidden}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:inherit}.footer{color:var(--muted);text-align:center;margin:30px 0 10px;font-size:13px}@media(max-width:900px){.hero,.chat-layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.wrap{padding:16px}.panel{border-radius:22px}}
+</style>
+</head>
+<body data-theme="light">
+<div class="wrap">
+  <div class="hero">
+    <section class="panel">
+      <div class="kicker">🌧️ 5564 群聊语气工程</div>
+      <h1>群聊人物<br>对话模拟器</h1>
+      <p class="lead">提取群聊中不同成员的语气、聊天方式、高频词和互动习惯，做成一个可以切换人物并进行模拟对话的页面。</p>
+      <div class="actions">
+        <button class="btn accent" onclick="switchTab('chat')">开始对话</button>
+        <button class="btn ghost" onclick="switchTab('people')">查看人物画像</button>
+        <button class="btn ghost" onclick="toggleTheme()">切换夜间模式</button>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="statgrid">
+        <div class="stat"><b>33,116</b><span>总消息记录</span></div>
+        <div class="stat"><b>7</b><span>主要可模拟人物</span></div>
+        <div class="stat"><b>2025</b><span>聊天记录起始年份</span></div>
+        <div class="stat"><b>AI</b><span>风格模拟与角色切换</span></div>
+      </div>
+      <p class="mini" style="margin-top:16px">说明：本页面只根据上传记录做“语言风格模拟”，不代表任何成员真实观点，也不会声称是本人。</p>
+    </section>
+  </div>
+
+  <div class="tabs"><div class="tabbar">
+    <button class="tab active" data-tab="people" onclick="switchTab('people')">人物画像</button>
+    <button class="tab" data-tab="chat" onclick="switchTab('chat')">对话模拟</button>
+    <button class="tab" data-tab="lexicon" onclick="switchTab('lexicon')">语气词库</button>
+    <button class="tab" data-tab="compare" onclick="switchTab('compare')">风格对比</button>
+  </div></div>
+
+  <section id="people" class="section active"><div class="grid" id="peopleGrid"></div></section>
+
+  <section id="chat" class="section">
+    <div class="chat-layout">
+      <aside class="side-list" id="personList"></aside>
+      <main class="panel chatbox">
+        <div class="chat-head"><div><b id="chatName">Carleos</b><div class="mini" id="chatTag">短句吐槽型</div></div><button class="btn ghost" onclick="clearChat()">清空</button></div>
+        <div class="chips">
+          <button class="chip" onclick="quick('今晚几点上战场')">今晚几点上战场</button>
+          <button class="chip" onclick="quick('这个策划案怎么样')">这个策划案怎么样</button>
+          <button class="chip" onclick="quick('我好像要完蛋了')">我好像要完蛋了</button>
+          <button class="chip" onclick="quick('帮我接一句群聊梗')">帮我接一句群聊梗</button>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="chat-input"><input id="input" placeholder="输入一句话，看看这个人物会怎么回……" onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn accent" onclick="sendMsg()">发送</button></div>
+      </main>
+    </div>
+  </section>
+
+  <section id="lexicon" class="section"><div class="grid" id="lexiconGrid"></div></section>
+
+  <section id="compare" class="section">
+    <div class="panel"><h2>风格对比雷达</h2><p class="mini">根据发言长度、标点、表情包比例、短句倾向和角色扮演感做的页面内简化展示。</p><div class="compare" id="compareGrid"></div></div>
+  </section>
+  <div class="footer">Generated from uploaded group-chat export · 5564 Persona Chat Page</div>
+</div>
+<script>
+const personas = [{"id": "carleos", "name": "Carleos", "avatar": "C", "count": "10633", "text": "7809", "avg": "7.9", "tag": "短句吐槽型｜反应快｜粤语/口头禅混搭", "tone": ["一句话切入，喜欢用短促反应推动话题", "常用“h”“唔知”“何意味”“唉”“ok”等低成本回复", "会顺着群里的梗继续加戏，偶尔用夸张称呼如“菠萝大神”"], "style": "短、快、带一点冷幽默。适合扮演群里随时接梗、补刀、发起调侃的人。", "phrases": ["h", "唔知", "何意味", "唉", "知道了", "ok", "🉑", "来了", "完蛋了", "哦买噶", "好险好险"], "examples": ["你退群吧", "那我是谁", "原来如此", "我投菠萝吹雪一票", "战友在复制粘贴ppt", "都怪deepseek"], "rules": ["优先用 3–12 字短句", "遇到离谱内容先吐槽再接梗", "可以夹少量粤语词和网络口癖"], "replies": ["h，何意味", "唔知，但听起来完蛋了", "🉑，这个可以投一票", "好险好险，差点信了", "原来如此，那都怪deepseek", "来了，战友开始复制粘贴ppt"]}, {"id": "tsuki", "name": "Tsuki", "avatar": "T", "count": "8134", "text": "5855", "avg": "6.8", "tag": "高反应情绪型｜问号密集｜戏剧化接梗", "tone": ["问号、感叹和省略号使用频繁，情绪变化明显", "喜欢用“我去”“哇塞”“真的假的”“笑死我了”快速表达态度", "很会把普通话题演成小剧场，常有角色化表达"], "style": "像群里的弹幕发动机，反应很快，语气鲜明，适合吐槽、震惊、催促、配合演戏。", "phrases": ["？", "。。。", "歪", "哇塞", "我去", "真的假的", "笑死我了", "神经", "唉", "好饿"], "examples": ["我现在真的没有时间陪你闹了。", "群主能不能踢出去", "别说。", "我还真想演", "我是你坚实的后盾", "我赌五毛钱"], "rules": ["多用问号和短促感叹", "可以把话题戏剧化", "表达支持时直接、夸张、有画面感"], "replies": ["？真的假的", "我去，别说，还真有点像", "。。。你现在真的很会整活", "笑死我了，我赌五毛钱", "歪，群主能不能管一下", "我是你坚实的后盾，加油"]}, {"id": "onion", "name": "Onion_YC", "avatar": "O", "count": "6469", "text": "4434", "avg": "8.6", "tag": "直接行动型｜游戏组队口吻｜锋利吐槽", "tone": ["回复直接，常用命令式或判断式短句", "常出现“来吧”“来了”“搞毛”“你妹的”等强口语表达", "游戏/组队语境明显，喜欢把聊天变成行动指令"], "style": "直给、带火气但不拖泥带水。适合催人、组队、吐槽穿搭或现场状况。", "phrases": ["好", "来吧", "来了", "知道了", "你妹的", "搞毛", "我要", "不对", "可以", "没有了"], "examples": ["那你活该被屏蔽", "洗澡", "来吧", "鸡时已到", "谁邀请我进一下队伍", "搞毛", "我也要"], "rules": ["先给结论，少铺垫", "催促和组队感强", "吐槽可以锋利但保持群聊玩笑感"], "replies": ["来吧，鸡时已到", "搞毛，这不对", "好，知道了", "你妹的，怎么又这样", "谁邀请我进一下队伍", "可以，但你这个打扮先换掉"]}, {"id": "elkuai", "name": "Elkuai.🍒ིྀ", "avatar": "E", "count": "4064", "text": "3080", "avg": "7.3", "tag": "温和补刀型｜认真担心｜轻度吐槽", "tone": ["比其他人更常出现解释、担心、缓和气氛的句子", "常用“天哪”“对啊”“没有”“干嘛”“快点”等日常口语", "会在玩笑里加入一点理性判断和安全感"], "style": "语气相对柔和，但也会补刀。适合作为群里的提醒者、观察者、吐槽缓冲垫。", "phrases": ["？", "没有", "对啊", "干嘛", "来了来了", "哇塞", "我靠", "快点", "真假的", "天哪"], "examples": ["不要伤及无辜", "这人格分裂怀疑是真的", "万一deepseek耍我们的话", "有你这句话，我可就放心了", "夜深了，他该睡了"], "rules": ["先观察再回应", "可以担心事情会不会出问题", "常用轻柔但精准的补刀"], "replies": ["天哪，不要伤及无辜", "对啊，我也觉得有点离谱", "万一它又耍我们怎么办", "来了来了，快点", "有你这句话我可就放心了", "夜深了，他该睡了"]}, {"id": "blank", "name": "ㅤㅤ", "avatar": "□", "count": "2652", "text": "1590", "avg": "10.8", "tag": "冷面整活型｜句号压迫感｜红包/点名梗", "tone": ["常用单独问号、句号制造冷幽默", "喜欢点名、艾特、制造身份错位和防伪梗", "表达看似平静，实际很会拱火"], "style": "冷静、荒诞、带压迫感。适合突然冒出来点名、发判断、制造群聊名场面。", "phrases": ["？", "。", "等杨姨发红包", "你完了", "喜欢吗", "好的", "🌚", "真正的温家烨是会发红包的"], "examples": ["方源不会用二次元头像", "可以帮我签到吗", "你要火烧屁屁了", "真正的温家烨是会发红包的", "防伪图", "想看吗，那我发"], "rules": ["可以只回一个标点", "擅长点名和反向证明", "越平静越好笑"], "replies": ["？", "。", "你完了", "等杨姨发红包", "真正的温家烨是会发红包的", "喜欢吗，那我发"]}, {"id": "teracinde", "name": "Teracinde", "avatar": "Te", "count": "423", "text": "366", "avg": "60.0", "tag": "长文本AI感｜中英混搭｜身份扮演", "tone": ["平均文本长度明显更长，常出现英文和身份扮演", "会突然进入角色，例如 Marx、college students、university 等语境", "也会出现系统/服务器式表达，像半自动回复"], "style": "像群里的剧情生成器：会长篇解释、英文插入、角色扮演、突然严肃。", "phrases": ["大家好", "nice to meet you", "服务器错误..", "hello", "i can help you", "gambling is wrong", "对不起", "不客气"], "examples": ["hello i am karl marx", "nice to meet you pineapple", "you are college students from DGUT", "i know this is the best university in china", "if you read my book, i can help you"], "rules": ["可以中英混搭", "回复比别人更完整", "适合扮演老师、AI、历史人物或旁白"], "replies": ["大家好，nice to meet you", "hello, i can help you, pineapple", "服务器错误..但我还是明白了", "gambling is wrong，但这个梗可以继续", "you are college students from DGUT, this is important", "对不起，我刚才进入马克思模式了"]}, {"id": "demian", "name": "Demian", "avatar": "D", "count": "96", "text": "47", "avg": "5.4", "tag": "低频生活记录型｜现实反馈｜简短评价", "tone": ["发言少，偏现实生活反馈", "常围绕吃饭、地点、复习、天气/震感等实际情况", "句子短，像从现场随手发来的状态更新"], "style": "低调、生活化，不抢戏。适合报告现状、简单评价、补充真实体验。", "phrases": ["应该是", "在哪吃", "有点贵", "味道还可以", "还没", "太阴了", "[苦涩]"], "examples": ["是不是又着火了", "好晃", "我同学说广州也震", "在哪吃", "有点贵", "味道还可以", "复完了没", "还是烧烤好吃😋"], "rules": ["不要太夸张", "像现场反馈一样说话", "简短真实，偶尔带表情"], "replies": ["应该是", "在哪吃", "有点贵，但味道还可以", "还没，太阴了", "我同学说那边也有点动静", "还是烧烤好吃😋"]}];
+let current = personas[0];
+function $(id){return document.getElementById(id)}
+function switchTab(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));window.scrollTo({top:0,behavior:'smooth'})}
+function toggleTheme(){document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark'}
+function renderPeople(){
+ $('peopleGrid').innerHTML=personas.map(p=>`<article class="card"><div class="person-top"><div class="avatar">${p.avatar}</div><div><h3>${p.name}</h3><div class="tag">${p.tag}</div></div></div><p class="mini">${p.style}</p><div class="pillbox">${p.phrases.slice(0,6).map(x=>`<span class="pill">${x}</span>`).join('')}</div><div class="details"><b>聊天方式</b><ul>${p.tone.map(x=>`<li>${x}</li>`).join('')}</ul></div><button class="btn ghost" onclick="selectPersona('${p.id}');switchTab('chat')">和 TA 对话</button></article>`).join('')
+ $('personList').innerHTML=personas.map(p=>`<button class="person-btn ${p.id===current.id?'active':''}" onclick="selectPersona('${p.id}')"><div class="avatar">${p.avatar}</div><div><b>${p.name}</b><div class="mini">${p.tag}</div></div></button>`).join('')
+ $('lexiconGrid').innerHTML=personas.map(p=>`<article class="card"><h3>${p.name}</h3><div class="pillbox">${p.phrases.map(x=>`<span class="pill">${x}</span>`).join('')}</div><div class="details"><b>样例句</b><ul>${p.examples.map(x=>`<li>${x}</li>`).join('')}</ul></div></article>`).join('')
+ renderCompare(); updateChatHead();
+}
+function renderCompare(){
+ const metrics={carleos:[82,70,58,85],tsuki:[92,88,62,76],onion:[78,66,52,83],elkuai:[62,60,48,64],blank:[72,76,56,90],teracinde:[55,42,25,18],demian:[28,25,35,70]};
+ const names=['情绪反应','梗密度','表情/符号','短句倾向'];
+ $('compareGrid').innerHTML=personas.map(p=>`<div class="card"><div class="person-top"><div class="avatar">${p.avatar}</div><div><h3>${p.name}</h3><div class="tag">消息 ${p.count} · 文本 ${p.text} · 均长 ${p.avg}</div></div></div>${names.map((n,i)=>`<div class="mini" style="margin-top:10px">${n}</div><div class="meter"><i style="width:${metrics[p.id][i]}%"></i></div>`).join('')}</div>`).join('')
+}
+function selectPersona(id){current=personas.find(p=>p.id===id)||personas[0];document.querySelectorAll('.person-btn').forEach((b,i)=>b.classList.toggle('active',personas[i].id===current.id));updateChatHead();bot(`已切换到 ${current.name} 的语气。${current.replies[0]}`)}
+function updateChatHead(){if(!$('chatName'))return;$('chatName').textContent=current.name;$('chatTag').textContent=current.tag}
+function addMsg(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;$('messages').appendChild(d);$('messages').scrollTop=$('messages').scrollHeight}
+function bot(text){addMsg(text,'bot')}
+function user(text){addMsg(text,'user')}
+function generateReply(input){
+ const t=input.trim(); let pool=[...current.replies];
+ if(/[？?]/.test(t)) pool.push(current.id==='blank'?'？':current.id==='tsuki'?'？真的假的':current.id==='teracinde'?'let me think about it, 这个问题很重要':'唔知，但可以');
+ if(/完蛋|糟|惨|寄|死/.test(t)) pool.push(current.id==='carleos'?'完蛋了，都怪deepseek':current.id==='blank'?'你完了':current.id==='elkuai'?'天哪，先不要伤及无辜':'搞毛，先稳住');
+ if(/吃|饭|饿|奶茶|咖啡/.test(t)) pool.push(current.id==='demian'?'在哪吃，味道还可以吗':current.id==='tsuki'?'好饿。。。':current.id==='onion'?'来吧，我也要':'可以，🉑');
+ if(/游戏|吃鸡|战场|队伍/.test(t)) pool.push(current.id==='onion'?'来吧，鸡时已到':current.id==='carleos'?'今晚几点上战场':current.id==='tsuki'?'滚吧我们的战友情':'看来我们这个小队已经难以集结了');
+ if(/策划|ppt|作业|拍摄/.test(t)) pool.push(current.id==='carleos'?'战友在复制粘贴ppt':current.id==='blank'?'你要火烧屁屁了':current.id==='elkuai'?'万一deepseek耍我们的话，还是检查一下':'服务器错误..但建议查漏补缺');
+ return pool[Math.floor(Math.random()*pool.length)];
+}
+function sendMsg(){const v=$('input').value;if(!v.trim())return;user(v);$('input').value='';setTimeout(()=>bot(generateReply(v)),180)}
+function quick(t){$('input').value=t;sendMsg()}
+function clearChat(){$('messages').innerHTML='';bot(`你好，这里是 ${current.name} 风格模拟。${current.replies[0]}`)}
+renderPeople(); clearChat();
+</script>
+</body>
+</html>
